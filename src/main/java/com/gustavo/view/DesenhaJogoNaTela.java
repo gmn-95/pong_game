@@ -1,14 +1,13 @@
 package com.gustavo.view;
 
 import com.gustavo.Bola;
-import com.gustavo.Colisao;
 import com.gustavo.jogadores.Jogadores;
 import com.gustavo.Movimento;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class DesenhaNaTela extends JPanel implements Runnable {
+public class DesenhaJogoNaTela extends JPanel implements Runnable {
 
     private Jogadores jogadores;
     private Bola bola;
@@ -16,12 +15,10 @@ public class DesenhaNaTela extends JPanel implements Runnable {
     private final int widthTela;
     private final int heightTela;
     private Thread gameThread;
-
     private boolean jaIniciou = false;
-
     private Pontuacao pontuacao;
 
-    public DesenhaNaTela(int widthTela, int heightTela, Jogadores jogadores, Bola bola, Movimento movimento, Pontuacao pontuacao) {
+    public DesenhaJogoNaTela(int widthTela, int heightTela, Jogadores jogadores, Bola bola, Movimento movimento, Pontuacao pontuacao) {
         this.widthTela = widthTela;
         this.heightTela = heightTela;
         this.jogadores = jogadores;
@@ -44,18 +41,9 @@ public class DesenhaNaTela extends JPanel implements Runnable {
     }
 
     private void paintGame(Graphics g) {
-        // Cor da tela
-        g.setColor(Color.BLACK);
-        // Desenhar as 'raquetes'
-        g.setColor(Color.WHITE);
-        g.fillRect(jogadores.getPlayer1().x, jogadores.getPlayer1().y, jogadores.getPlayer1().width, jogadores.getPlayer1().height);
-        g.fillRect(jogadores.getPlayer2().x, jogadores.getPlayer2().y, jogadores.getPlayer2().width, jogadores.getPlayer2().height);
-
-        //divisória tela
-        g.drawLine(widthTela / 2, 0, widthTela / 2, heightTela);
-
-        //bola
-        g.fillOval(bola.getX(), bola.getY(), bola.getRaio(), bola.getRaio());
+        pontuacao.draw(g);
+        jogadores.draw(g);
+        bola.draw(g);
 
         //isso deixa o jogo 'liso' sem travamentos
         Toolkit.getDefaultToolkit().sync();
@@ -78,7 +66,7 @@ public class DesenhaNaTela extends JPanel implements Runnable {
             if(delta >=1) {
                 movimento.movimentoDosJogadores();
                 movimento.movimentoBola();
-                direcaoInicialBola();
+                direcaoBolaAposPontoOuIncioJogo();
                 resetPositionBolaEJogadores();
                 repaint();
                 delta--;
@@ -88,18 +76,17 @@ public class DesenhaNaTela extends JPanel implements Runnable {
 
     private void resetPositionBolaEJogadores(){
         if(pontuacao.verificaSeBolaPassouDosLimites()){
-            this.jogadores = new Jogadores();
-            this.bola = new Bola(widthTela, heightTela);
-            this.movimento = new Movimento(jogadores, bola, new Colisao(bola, widthTela, heightTela));
-            addKeyListener(this.movimento);
+            jogadores.resetPosicao();
+            bola.resetPosicao();
+            movimento.resetMovimento(jogadores, bola);
             pontuacao.setBola(bola);
             jaIniciou = false;
         }
     }
 
-    private void direcaoInicialBola(){
+    private void direcaoBolaAposPontoOuIncioJogo(){
         if(!jaIniciou){
-            movimento.direcaoInicialBola(true);
+            movimento.direcaoInicialBola();
             jaIniciou = true;
         }
     }
