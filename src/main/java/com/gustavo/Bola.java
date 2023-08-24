@@ -1,12 +1,15 @@
 package com.gustavo;
 
+import java.awt.*;
+
 public class Bola {
 
     private int raio = 8;
     private int x;
     private int y;
-    private int xVelocidade = 2;
-    private int yVelocidade = 2;
+    private int xVelocidade;
+    private int yVelocidade;
+    private final int velocidadeMaxima = 11;
     private final int widthTela;
     private final int heightTela;
 
@@ -26,12 +29,22 @@ public class Bola {
         y = centroY - raio;
     }
 
+    public void draw(Graphics g){
+        g.fillOval(getX(), getY(), getRaio(), getRaio());
+    }
+
     public void moverParaCima(){
         setY(getY() - getyVelocidade());
     }
 
     public void moverParaBaixo(){
         setY(getY() + getyVelocidade());
+    }
+
+    public void resetPosicao(){
+        xVelocidade = 0;
+        yVelocidade = 0;
+        calculaPosicao();
     }
 
     public void moverParaEsquerda(){
@@ -90,11 +103,22 @@ public class Bola {
         this.xVelocidade = xVelocidade;
     }
 
+    public int getVelocidadeMaxima() {
+        return velocidadeMaxima;
+    }
+
     public int getyVelocidade() {
         return yVelocidade;
     }
 
     public void setyVelocidade(int yVelocidade) {
         this.yVelocidade = yVelocidade;
+    }
+
+    public void aumentaVelocidade(int v){
+        if(v < velocidadeMaxima){
+            setxVelocidade(v);
+            setyVelocidade(v);
+        }
     }
 }
