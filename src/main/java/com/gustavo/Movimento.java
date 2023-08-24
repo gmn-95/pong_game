@@ -4,6 +4,7 @@ import com.gustavo.jogadores.Jogadores;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 public class Movimento implements KeyListener {
 
@@ -18,6 +19,7 @@ public class Movimento implements KeyListener {
     private boolean deveSubir = false;
     private boolean deveDescer = false;
 
+    private int vAtual;
     private Colisao colisao;
 
     private enum Players{
@@ -35,6 +37,19 @@ public class Movimento implements KeyListener {
         this.jogadores = jogadores;
         this.bola = bola;
         this.colisao = colisao;
+
+        this.bola.setxVelocidade(this.bola.getVelocidadeMaxima() / 2);
+        this.bola.setyVelocidade(this.bola.getVelocidadeMaxima() / 2);
+        vAtual = this.bola.getxVelocidade();
+    }
+
+    public void resetMovimento(Jogadores jogadores, Bola bola){
+        this.jogadores = jogadores;
+        this.bola = bola;
+
+        this.bola.setxVelocidade(this.bola.getVelocidadeMaxima() / 2);
+        this.bola.setyVelocidade(this.bola.getVelocidadeMaxima() / 2);
+        vAtual = this.bola.getxVelocidade();
     }
 
     @Override
@@ -108,9 +123,11 @@ public class Movimento implements KeyListener {
 
         if(colisao.checkColisaoBolaJogador(jogadores.getPlayer2())){
             inverteParaEsquerda();
+            aumentaVelocidadeBolaSeNecessario();
         }
         else if(colisao.checkColisaoBolaJogador(jogadores.getPlayer1())){
             inverteParaDireita();
+            aumentaVelocidadeBolaSeNecessario();
         }
 
         if(deveVoltarLadoDireito){
@@ -138,33 +155,50 @@ public class Movimento implements KeyListener {
             bola.moverParaDireita();
             inverteParaDireita();
             zeraDirecaoVertical();
+            aumentaVelocidadeBolaSeNecessario();
+//            System.out.println("checkColisaoBolaNoMeioJogador P1");
         }
         else if(colisao.checkColisaoBolaNoMeioJogador(jogadores.getPlayer2())){
             bola.moverParaEsquerda();
             inverteParaEsquerda();
             zeraDirecaoVertical();
+            aumentaVelocidadeBolaSeNecessario();
+//            System.out.println("checkColisaoBolaNoMeioJogador P2");
         }
 
-        if(colisao.checkColisaoBolaBateuNaPontaSuperioDaRaquete(jogadores.getPlayer1())){
+        if(colisao.checkColisaoBolaBateuNaPontaSuperioDaRaquete(jogadores.getPlayer1())
+                || colisao.checkColisaoBolaBateuNaPontaSuperioDaRaquete(jogadores.getPlayer2())){
             inverteParaDeveSubir();
+            aumentaVelocidadeBolaSeNecessario();
+//            System.out.println("checkColisaoBolaBateuNaPontaSuperioDaRaquete");
         }
 
-        if(colisao.checkColisaoBolaBateuNaPontaSuperioDaRaquete(jogadores.getPlayer2())){
-            inverteParaDeveSubir();
-        }
-
-        if(colisao.checkColisaoBolaBateuNaPontaInferiorDaRaquete(jogadores.getPlayer1())){
+        if(colisao.checkColisaoBolaBateuNaPontaInferiorDaRaquete(jogadores.getPlayer1())
+                || colisao.checkColisaoBolaBateuNaPontaInferiorDaRaquete(jogadores.getPlayer2())){
             inverteParaDeveDescer();
-        }
-
-        if(colisao.checkColisaoBolaBateuNaPontaInferiorDaRaquete(jogadores.getPlayer2())){
-            inverteParaDeveDescer();
+            aumentaVelocidadeBolaSeNecessario();
+//            System.out.println("checkColisaoBolaBateuNaPontaInferiorDaRaquete");
         }
     }
 
-    public void direcaoInicialBola(boolean init){
-        deveVoltarLadoDireito = init;
-//        deveDescer = true;
+    public void direcaoInicialBola(){
+        Random random = new Random();
+        int direcaoInit = random.nextInt(4);
+        switch (direcaoInit) {
+            case 0:
+                inverteParaEsquerda();
+                inverteParaDeveSubir();
+                break;
+            case 1:
+                inverteParaEsquerda();
+                inverteParaDeveDescer();
+            case 2:
+                inverteParaDireita();
+                inverteParaDeveSubir();
+            default:
+                inverteParaDireita();
+                inverteParaDeveDescer();
+        }
     }
 
     private void inverteParaDeveSubir(){
@@ -190,6 +224,14 @@ public class Movimento implements KeyListener {
     private void zeraDirecaoVertical(){
         deveDescer = false;
         deveSubir = false;
+    }
+
+    private void aumentaVelocidadeBolaSeNecessario(){
+//        System.out.println("VELOCIDADE ATUAL: " + vAtual);
+        if(vAtual < bola.getVelocidadeMaxima()){
+            vAtual++;
+            bola.aumentaVelocidade(vAtual);
+        }
     }
 
 }
