@@ -1,6 +1,6 @@
 package com.gustavo.view;
 
-import com.gustavo.Bola;
+import com.gustavo.view.bola.Bola;
 
 import java.awt.*;
 

@@ -1,9 +1,9 @@
 package com.gustavo.view;
 
-import com.gustavo.Bola;
-import com.gustavo.Colisao;
-import com.gustavo.Movimento;
-import com.gustavo.jogadores.Jogadores;
+import com.gustavo.view.bola.Bola;
+import com.gustavo.view.colisao.Colisao;
+import com.gustavo.view.movimentos.Movimento;
+import com.gustavo.view.jogadores.Jogadores;
 
 import javax.swing.*;
 import java.awt.*;

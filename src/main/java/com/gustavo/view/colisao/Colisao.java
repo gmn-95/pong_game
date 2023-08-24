@@ -1,4 +1,6 @@
-package com.gustavo;
+package com.gustavo.view.colisao;
+
+import com.gustavo.view.bola.Bola;
 
 import java.awt.*;
 

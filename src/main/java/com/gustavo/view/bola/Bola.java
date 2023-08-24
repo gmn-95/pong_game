@@ -1,4 +1,4 @@
-package com.gustavo;
+package com.gustavo.view.bola;
 
 import java.awt.*;
 

@@ -1,6 +1,8 @@
-package com.gustavo;
+package com.gustavo.view.movimentos;
 
-import com.gustavo.jogadores.Jogadores;
+import com.gustavo.view.bola.Bola;
+import com.gustavo.view.colisao.Colisao;
+import com.gustavo.view.jogadores.Jogadores;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

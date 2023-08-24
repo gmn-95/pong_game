@@ -1,4 +1,4 @@
-package com.gustavo.jogadores;
+package com.gustavo.view.jogadores;
 
 import java.awt.*;
 
