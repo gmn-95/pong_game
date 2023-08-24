@@ -29,28 +29,22 @@ public class Colisao {
     }
 
     public boolean checkColisaoBolaNoMeioJogador(Rectangle jogador){
-//        System.out.println((jogador.getY() - 10) >= bola.getY() && (jogador.getY() + 10) <= bola.getY() && jogador.getX() == bola.getX());
-//        System.out.println("jogador.getY(): " + jogador.getY());
-//        System.out.println("bola.getY(): " + bola.getY());
-//        System.out.println("jogador.getX(): " + jogador.getX());
-//        System.out.println("bola.getX(): " + bola.limiteDireito());
-//        System.out.println("jogador.getMinX(): " + jogador.getMinX());
-//        System.out.println("jogador.getMinY(): " + jogador.getMinY());
-//        System.out.println("jogador.getMaxY(): " + jogador.getMaxY());
-        return bola.getY() <= jogador.getMaxY() - 30 && bola.getY() >= jogador.getMinY() + 30
-                && checkColisaoBolaJogador(jogador);
+        return checkColisaoBolaJogador(jogador) &&
+                (
+                    bola.getY() == jogador.getCenterY()
+                    || (bola.getY() >= jogador.getCenterY() - 10 && bola.getY() <= jogador.getCenterY())
+                    || (bola.getY() <= jogador.getCenterY() + 10 && bola.getY() >= jogador.getCenterY())
+                );
     }
 
     public boolean checkColisaoBolaBateuNaPontaSuperioDaRaquete(Rectangle jogador){
         return checkColisaoBolaJogador(jogador)
-//                && bola.getY() >= jogador.getMinY()
-                && bola.getY() <= jogador.getCenterY() - 28;
+                && bola.getY() <= jogador.getCenterY() - 20;
     }
 
     public boolean checkColisaoBolaBateuNaPontaInferiorDaRaquete(Rectangle jogador){
         return checkColisaoBolaJogador(jogador)
-//                && bola.getY() <= jogador.getMaxY()
-                && bola.getY() >= jogador.getCenterY() + 28;
+                && bola.getY() >= jogador.getCenterY() + 10;
     }
 
     public boolean checkColisaoBolaParedeInferior(){
