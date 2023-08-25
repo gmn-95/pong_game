@@ -1,5 +1,7 @@
-package com.gustavo.view;
+package com.gustavo.view.menus;
 
+import com.gustavo.view.Pontuacao;
+import com.gustavo.view.Game;
 import com.gustavo.view.bola.Bola;
 import com.gustavo.view.colisao.Colisao;
 import com.gustavo.view.movimentos.Movimento;
@@ -8,36 +10,45 @@ import com.gustavo.view.jogadores.Jogadores;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
-public class Menu extends JPanel implements KeyListener {
+public class MenuInicial extends JPanel implements Menu {
 
     private final int widthTela;
     private final int heightTela;
     private JLabel btStartGame;
     private JLabel btExitGame;
+    private JLabel btHelpGame;
     private boolean opcaoStartSelecionada = true;
     private boolean opcaoExitSelecionada = false;
+    private boolean opcaoHelpSelecionada = false;
 
-    public Menu(int widthTela, int heightTela) {
+    public MenuInicial(int widthTela, int heightTela) {
         this.widthTela = widthTela;
         this.heightTela = heightTela;
+        initConfigs();
+    }
+
+    @Override
+    public void initConfigs(){
         setSize(this.widthTela, this.heightTela);
         setBackground(Color.BLACK);
         setFocusable(true);
         setVisible(true);
         setLayout(new GridBagLayout());
-        initOptions();
         addKeyListener(this);
-    }
-
-    public void initOptions(){
         initButtons();
     }
 
-    private void initButtons(){
+    @Override
+    public void initTexto() {
+
+    }
+
+    @Override
+    public void initButtons(){
 
         btStartGame = createOptionLabel("START");
+        btHelpGame = createOptionLabel("HELP");
         btExitGame = createOptionLabel("EXIT");
 
         GridBagConstraints constraints = new GridBagConstraints();
@@ -51,14 +62,10 @@ public class Menu extends JPanel implements KeyListener {
         add(btStartGame, constraints);
 
         constraints.gridy = 1;
-        add(btExitGame, constraints);
-    }
+        add(btHelpGame, constraints);
 
-    private JLabel createOptionLabel(String text) {
-        JLabel label = new JLabel(text);
-        label.setFont(new Font("Arial", Font.BOLD, 24));
-        label.setForeground(Color.WHITE);
-        return label;
+        constraints.gridy = 2;
+        add(btExitGame, constraints);
     }
 
     @Override
@@ -68,11 +75,17 @@ public class Menu extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-        if(keyEvent.getKeyCode() == KeyEvent.VK_DOWN){
-            setButtonSelection(false, true);
+        if(keyEvent.getKeyCode() == KeyEvent.VK_DOWN && opcaoStartSelecionada){
+            setButtonSelection(false, true, false);
         }
-        else if (keyEvent.getKeyCode() == KeyEvent.VK_UP) {
-            setButtonSelection(true, false);
+        else if(keyEvent.getKeyCode() == KeyEvent.VK_DOWN && opcaoHelpSelecionada){
+            setButtonSelection(false, false, true);
+        }
+        else if (keyEvent.getKeyCode() == KeyEvent.VK_UP && opcaoExitSelecionada) {
+            setButtonSelection(false, true, false);
+        }
+        else if (keyEvent.getKeyCode() == KeyEvent.VK_UP && opcaoHelpSelecionada) {
+            setButtonSelection(true, false, false);
         }
         else if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
             if(opcaoExitSelecionada){
@@ -82,12 +95,14 @@ public class Menu extends JPanel implements KeyListener {
             else if(opcaoStartSelecionada){
                 iniciaPartida();
             }
+            else if(opcaoHelpSelecionada){
+                iniciaTelaDeAjuda();
+            }
         }
     }
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-
     }
 
     private void iniciaPartida(){
@@ -96,23 +111,38 @@ public class Menu extends JPanel implements KeyListener {
         Colisao colisao = new Colisao(bola, widthTela, heightTela);
         Movimento movimento = new Movimento(jogadores, bola, colisao);
         Pontuacao pontuacao = new Pontuacao(bola, widthTela, heightTela);
-        DesenhaJogoNaTela desenhaJogoNaTela = new DesenhaJogoNaTela(widthTela, heightTela, jogadores, bola, movimento, pontuacao);
+        Game startGame = new Game(widthTela, heightTela, jogadores, bola, movimento, pontuacao);
 
         JFrame jFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         jFrame.getContentPane().removeKeyListener(this);
         jFrame.getContentPane().remove(this);
-        jFrame.getContentPane().add(desenhaJogoNaTela);
+        jFrame.getContentPane().add(startGame);
         jFrame.getContentPane().revalidate();
         jFrame.getContentPane().repaint();
 
-        desenhaJogoNaTela.requestFocusInWindow();
+        startGame.requestFocusInWindow();
     }
 
-    private void setButtonSelection(boolean start, boolean exit) {
+    private void iniciaTelaDeAjuda(){
+        MenuAjuda menuAjuda = new MenuAjuda(widthTela, heightTela);
+
+        JFrame jFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        jFrame.getContentPane().removeKeyListener(this);
+        jFrame.getContentPane().remove(this);
+        jFrame.getContentPane().add(menuAjuda);
+        jFrame.getContentPane().revalidate();
+        jFrame.getContentPane().repaint();
+
+        menuAjuda.requestFocusInWindow();
+    }
+
+    private void setButtonSelection(boolean start, boolean help, boolean exit) {
         opcaoStartSelecionada = start;
+        opcaoHelpSelecionada = help;
         opcaoExitSelecionada = exit;
 
-        btStartGame.setForeground(start ? Color.YELLOW : Color.WHITE);
-        btExitGame.setForeground(exit ? Color.YELLOW : Color.WHITE);
+        btStartGame.setForeground(opcaoStartSelecionada ? Color.YELLOW : Color.WHITE);
+        btHelpGame.setForeground(opcaoHelpSelecionada ? Color.YELLOW : Color.WHITE);
+        btExitGame.setForeground(opcaoExitSelecionada ? Color.YELLOW : Color.WHITE);
     }
 }
