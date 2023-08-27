@@ -1,8 +1,8 @@
-package com.gustavo.application;
+package com.gustavo.start;
 
 import com.gustavo.view.TelaFrame;
 
-public class Main {
+public class StartGame {
     public static void main(String[] args) {
         TelaFrame telaFrame = new TelaFrame();
         telaFrame.setResizable(false);
