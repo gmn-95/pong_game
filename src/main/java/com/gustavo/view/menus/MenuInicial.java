@@ -47,9 +47,9 @@ public class MenuInicial extends JPanel implements Menu {
     @Override
     public void initButtons(){
 
-        btStartGame = createOptionLabel("START");
-        btHelpGame = createOptionLabel("HELP");
-        btExitGame = createOptionLabel("EXIT");
+        btStartGame = createOptionLabel("INICIAR");
+        btHelpGame = createOptionLabel("AJUDA");
+        btExitGame = createOptionLabel("SAIR");
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
