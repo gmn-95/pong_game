@@ -53,7 +53,6 @@ public class Game extends JPanel implements Runnable, KeyListener {
     private void addMenuPause() {
         isPausado = true;
         menuPause = new MenuPause(widthTela, heightTela);
-        addKeyListener(menuPause);
         add(menuPause); // Adicione o menuPause ao Game JPanel
         revalidate(); // Revalide o Game JPanel para refletir as alterações
     }
@@ -61,7 +60,6 @@ public class Game extends JPanel implements Runnable, KeyListener {
     private void removeMenuPause(){
         isPausado = false;
         remove(menuPause);
-        removeKeyListener(menuPause);
         revalidate();
     }
 
@@ -101,8 +99,11 @@ public class Game extends JPanel implements Runnable, KeyListener {
             }
 
             if(delta >=1) {
-                movimento.movimentoDosJogadores();
                 movimento.movimentoBola();
+                if(movimento.isIAjogando()){
+                    movimento.movimentosIA();
+                }
+                movimento.movimentoDosJogadores();
                 direcaoBolaAposPontoOuIncioJogo();
                 resetPositionBolaEJogadores();
                 repaint();
@@ -140,14 +141,15 @@ public class Game extends JPanel implements Runnable, KeyListener {
     public void keyPressed(KeyEvent keyEvent) {
         if(keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE && !isPausado){
             addMenuPause();
-            revalidate();
         }
         else if(keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE && isPausado) {
             removeMenuPause();
-            revalidate();
         }
-        else if(keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE && Game.isPausado
-                || keyEvent.getKeyCode() == KeyEvent.VK_ENTER && menuPause.isOpcaoContinueSelecionada()){
+        else if(keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE
+                && Game.isPausado
+                || (keyEvent.getKeyCode() == KeyEvent.VK_ENTER
+                && menuPause != null
+                && menuPause.isOpcaoContinueSelecionada())){
             menuPause.setButtonSelection(false, false);
             removeMenuPause();
         }
@@ -157,7 +159,7 @@ public class Game extends JPanel implements Runnable, KeyListener {
         else if (keyEvent.getKeyCode() == KeyEvent.VK_UP && Game.isPausado) {
             menuPause.setButtonSelection(true, false);
         }
-        else if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER && menuPause.isOpcaoExitSelecionada()) {
+        else if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER && menuPause != null && menuPause.isOpcaoExitSelecionada()) {
             removeMenuPause();
             MenuInicial menu = new MenuInicial(widthTela, heightTela);
             JFrame jFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
