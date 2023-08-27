@@ -9,9 +9,10 @@ public class Bola {
     private int y;
     private int xVelocidade;
     private int yVelocidade;
-    private final int velocidadeMaxima = 11;
+    private final int velocidadeMaxima = 18;
     private final int widthTela;
     private final int heightTela;
+    private int velocidadeInicial = 3;
 
     public Bola(int widthTela, int heightTela) {
         this.widthTela = widthTela;
@@ -120,5 +121,9 @@ public class Bola {
             setxVelocidade(v);
             setyVelocidade(v);
         }
+    }
+
+    public int getVelocidadeInicial() {
+        return velocidadeInicial;
     }
 }
