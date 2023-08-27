@@ -3,9 +3,7 @@ package com.gustavo.view.menus;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
-//public class MenuPause extends JPanel implements KeyListener {
 public class MenuPause extends JPanel implements Menu {
 
     private final int widthTela;
@@ -28,7 +26,6 @@ public class MenuPause extends JPanel implements Menu {
         setFocusable(true);
         setVisible(true);
         setLayout(new GridBagLayout());
-        addKeyListener(this);
         initButtons();
     }
 
@@ -82,18 +79,4 @@ public class MenuPause extends JPanel implements Menu {
         return opcaoContinueSelecionada;
     }
 
-    @Override
-    public void keyTyped(KeyEvent keyEvent) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent keyEvent) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent keyEvent) {
-
-    }
 }
