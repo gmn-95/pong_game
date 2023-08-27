@@ -1,17 +1,11 @@
 package com.gustavo.view.menus;
 
-import com.gustavo.view.Pontuacao;
-import com.gustavo.view.Game;
-import com.gustavo.view.bola.Bola;
-import com.gustavo.view.colisao.Colisao;
-import com.gustavo.view.movimentos.Movimento;
-import com.gustavo.view.jogadores.Jogadores;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class MenuInicial extends JPanel implements Menu {
+public class MenuInicial extends JPanel implements Menu, KeyListener {
 
     private final int widthTela;
     private final int heightTela;
@@ -21,6 +15,7 @@ public class MenuInicial extends JPanel implements Menu {
     private boolean opcaoStartSelecionada = true;
     private boolean opcaoExitSelecionada = false;
     private boolean opcaoHelpSelecionada = false;
+    private MenuEscolherModoJogo menuEscolherModoJogo;
 
     public MenuInicial(int widthTela, int heightTela) {
         this.widthTela = widthTela;
@@ -106,21 +101,17 @@ public class MenuInicial extends JPanel implements Menu {
     }
 
     private void iniciaPartida(){
-        Jogadores jogadores = new Jogadores();
-        Bola bola = new Bola(widthTela, heightTela);
-        Colisao colisao = new Colisao(bola, widthTela, heightTela);
-        Movimento movimento = new Movimento(jogadores, bola, colisao);
-        Pontuacao pontuacao = new Pontuacao(bola, widthTela, heightTela);
-        Game startGame = new Game(widthTela, heightTela, jogadores, bola, movimento, pontuacao);
 
+        menuEscolherModoJogo = new MenuEscolherModoJogo(widthTela, heightTela);
         JFrame jFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         jFrame.getContentPane().removeKeyListener(this);
         jFrame.getContentPane().remove(this);
-        jFrame.getContentPane().add(startGame);
+        jFrame.getContentPane().add(menuEscolherModoJogo);
         jFrame.getContentPane().revalidate();
         jFrame.getContentPane().repaint();
 
-        startGame.requestFocusInWindow();
+        menuEscolherModoJogo.requestFocusInWindow();
+
     }
 
     private void iniciaTelaDeAjuda(){
