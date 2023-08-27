@@ -1,6 +1,5 @@
 package com.gustavo.view.menus;
 
-import com.gustavo.view.Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +28,7 @@ public class MenuPause extends JPanel implements Menu {
         setFocusable(true);
         setVisible(true);
         setLayout(new GridBagLayout());
-//        addKeyListener(this);
+        addKeyListener(this);
         initButtons();
     }
 
@@ -47,12 +46,10 @@ public class MenuPause extends JPanel implements Menu {
 
         btContinueGame.setForeground(Color.YELLOW);
         add(btContinueGame, constraints);
-//        add(btContinueGame);
 
         constraints.insets = new Insets(10, 0, 10, 0);
         constraints.gridy = 1;
         add(btExitGame, constraints);
-//        add(btExitGame);
     }
 
     @Override
@@ -69,6 +66,22 @@ public class MenuPause extends JPanel implements Menu {
 
     }
 
+    public void setButtonSelection(boolean continua, boolean exit) {
+        opcaoContinueSelecionada = continua;
+        opcaoExitSelecionada = exit;
+
+        btContinueGame.setForeground(opcaoContinueSelecionada ? Color.YELLOW : Color.WHITE);
+        btExitGame.setForeground(opcaoExitSelecionada ? Color.YELLOW : Color.WHITE);
+    }
+
+    public boolean isOpcaoExitSelecionada() {
+        return opcaoExitSelecionada;
+    }
+
+    public boolean isOpcaoContinueSelecionada() {
+        return opcaoContinueSelecionada;
+    }
+
     @Override
     public void keyTyped(KeyEvent keyEvent) {
 
@@ -76,35 +89,11 @@ public class MenuPause extends JPanel implements Menu {
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-        if(keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE && Game.isPausado
-                || keyEvent.getKeyCode() == KeyEvent.VK_ENTER && opcaoContinueSelecionada){
-            setButtonSelection(false, false);
-            Game.isPausado = false;
-            remove(btContinueGame);
-            remove(btExitGame);
-        }
-        else if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
-            setButtonSelection(false, true);
-        }
-        else if (keyEvent.getKeyCode() == KeyEvent.VK_UP) {
-            setButtonSelection(true, false);
-        }
-        else if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER && opcaoExitSelecionada) {
-            SwingUtilities.getWindowAncestor(this).dispose();
-            System.exit(0);
-        }
+
     }
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
 
-    }
-
-    private void setButtonSelection(boolean continua, boolean exit) {
-        opcaoContinueSelecionada = continua;
-        opcaoExitSelecionada = exit;
-
-        btContinueGame.setForeground(opcaoContinueSelecionada ? Color.YELLOW : Color.WHITE);
-        btExitGame.setForeground(opcaoExitSelecionada ? Color.YELLOW : Color.WHITE);
     }
 }
