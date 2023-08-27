@@ -20,8 +20,8 @@ public class Movimento implements KeyListener {
     private boolean deveVoltarLadoEsquerdo = false;
     private boolean deveSubir = false;
     private boolean deveDescer = false;
-
-    private int vAtual;
+    private boolean isIAjogando;
+    private int vAtual = 0;
     private Colisao colisao;
 
     private enum Players{
@@ -35,23 +35,21 @@ public class Movimento implements KeyListener {
 
     }
 
-    public Movimento(Jogadores jogadores, Bola bola, Colisao colisao) {
-        this.jogadores = jogadores;
-        this.bola = bola;
+    public Movimento(Jogadores jogadores, Bola bola, Colisao colisao, boolean isIAjogando) {
+        resetMovimento(jogadores, bola);
         this.colisao = colisao;
+        this.isIAjogando = isIAjogando;
 
-        this.bola.setxVelocidade(this.bola.getVelocidadeMaxima() / 2);
-        this.bola.setyVelocidade(this.bola.getVelocidadeMaxima() / 2);
-        vAtual = this.bola.getxVelocidade();
     }
 
     public void resetMovimento(Jogadores jogadores, Bola bola){
         this.jogadores = jogadores;
         this.bola = bola;
 
-        this.bola.setxVelocidade(this.bola.getVelocidadeMaxima() / 2);
-        this.bola.setyVelocidade(this.bola.getVelocidadeMaxima() / 2);
-        vAtual = this.bola.getxVelocidade();
+        this.bola.setxVelocidade(this.bola.getVelocidadeInicial());
+        this.bola.setyVelocidade(this.bola.getVelocidadeInicial());
+        this.jogadores.setyVelocidadeMovimentoIa(1);
+        vAtual = this.bola.getVelocidadeInicial();
     }
 
     @Override
@@ -66,9 +64,9 @@ public class Movimento implements KeyListener {
             moveUp1 = true;
         } else if (keyCode == KeyEvent.VK_S) {
             moveDown1 = true;
-        } else if (keyCode == KeyEvent.VK_UP) {
+        } else if (keyCode == KeyEvent.VK_UP && !isIAjogando) {
             moveUp2 = true;
-        } else if (keyCode == KeyEvent.VK_DOWN) {
+        } else if (keyCode == KeyEvent.VK_DOWN && !isIAjogando) {
             moveDown2 = true;
         }
     }
@@ -80,44 +78,55 @@ public class Movimento implements KeyListener {
             moveUp1 = false;
         } else if (keyCode == KeyEvent.VK_S) {
             moveDown1 = false;
-        } else if (keyCode == KeyEvent.VK_UP) {
+        } else if (keyCode == KeyEvent.VK_UP && !isIAjogando) {
             moveUp2 = false;
-        } else if (keyCode == KeyEvent.VK_DOWN) {
+        } else if (keyCode == KeyEvent.VK_DOWN && !isIAjogando) {
             moveDown2 = false;
         }
     }
 
     private void moveParaCima(Players players){
         if(players.equals(Players.PLAYER_1)){
-            jogadores.getPlayer1().y -= jogadores.getyVelocidadeMovimentoParaCima();
+            jogadores.getPlayer1().y -= jogadores.getyVelocidadeMovimento();
         }
-        else {
-            jogadores.getPlayer2().y -= jogadores.getyVelocidadeMovimentoParaCima();
+        else if(players.equals(Players.PLAYER_2)) {
+            jogadores.getPlayer2().y -= jogadores.getyVelocidadeMovimento();
         }
     }
 
     private void moveParaBaixo(Players players){
         if(players.equals(Players.PLAYER_1)){
-            jogadores.getPlayer1().y += jogadores.getyVelocidadeMovimentoParaBaixo();
+            jogadores.getPlayer1().y += jogadores.getyVelocidadeMovimento();
         }
-        else {
-            jogadores.getPlayer2().y += jogadores.getyVelocidadeMovimentoParaBaixo();
+        else if(players.equals(Players.PLAYER_2)){
+            jogadores.getPlayer2().y += jogadores.getyVelocidadeMovimento();
         }
     }
 
     public void movimentoDosJogadores(){
-        if(moveUp1 && jogadores.getPlayer1().y >= 0){
+        if(moveUp1 && colisao.checkColisaoParedeCimaJogadores(jogadores.getPlayer1())){
             moveParaCima(Players.PLAYER_1);
         }
-        else if(moveDown1 && colisao.checkColisaoParedeJogadores(jogadores.getPlayer1())){
+        else if(moveDown1 && colisao.checkColisaoParedeBaixoJogadores(jogadores.getPlayer1())) {
             moveParaBaixo(Players.PLAYER_1);
         }
 
-        if(moveUp2 && jogadores.getPlayer2().y >= 0) {
+        if(moveUp2 && colisao.checkColisaoParedeCimaJogadores(jogadores.getPlayer2())) {
             moveParaCima(Players.PLAYER_2);
         }
-        else if(moveDown2 && colisao.checkColisaoParedeJogadores(jogadores.getPlayer2())){
+        else if(moveDown2 && colisao.checkColisaoParedeBaixoJogadores(jogadores.getPlayer2())) {
             moveParaBaixo(Players.PLAYER_2);
+        }
+    }
+
+    public void movimentosIA(){
+        if(deveVoltarLadoDireito){
+            if(bola.getY() < jogadores.getPlayer2().getMinY() && colisao.checkColisaoParedeCimaJogadores(jogadores.getPlayer2())){
+                moveParaCima(Players.PLAYER_2);
+            }
+            else if(bola.getY() > jogadores.getPlayer2().getMaxY() && colisao.checkColisaoParedeBaixoJogadores(jogadores.getPlayer2())){
+                moveParaBaixo(Players.PLAYER_2);
+            }
         }
     }
 
@@ -158,28 +167,21 @@ public class Movimento implements KeyListener {
             inverteParaDireita();
             zeraDirecaoVertical();
             aumentaVelocidadeBolaSeNecessario();
-//            System.out.println("checkColisaoBolaNoMeioJogador P1");
         }
         else if(colisao.checkColisaoBolaNoMeioJogador(jogadores.getPlayer2())){
             bola.moverParaEsquerda();
             inverteParaEsquerda();
             zeraDirecaoVertical();
             aumentaVelocidadeBolaSeNecessario();
-//            System.out.println("checkColisaoBolaNoMeioJogador P2");
         }
 
         if(colisao.checkColisaoBolaBateuNaPontaSuperioDaRaquete(jogadores.getPlayer1())
                 || colisao.checkColisaoBolaBateuNaPontaSuperioDaRaquete(jogadores.getPlayer2())){
             inverteParaDeveSubir();
-            aumentaVelocidadeBolaSeNecessario();
-//            System.out.println("checkColisaoBolaBateuNaPontaSuperioDaRaquete");
         }
-
-        if(colisao.checkColisaoBolaBateuNaPontaInferiorDaRaquete(jogadores.getPlayer1())
+        else if(colisao.checkColisaoBolaBateuNaPontaInferiorDaRaquete(jogadores.getPlayer1())
                 || colisao.checkColisaoBolaBateuNaPontaInferiorDaRaquete(jogadores.getPlayer2())){
             inverteParaDeveDescer();
-            aumentaVelocidadeBolaSeNecessario();
-//            System.out.println("checkColisaoBolaBateuNaPontaInferiorDaRaquete");
         }
     }
 
@@ -232,11 +234,16 @@ public class Movimento implements KeyListener {
     }
 
     private void aumentaVelocidadeBolaSeNecessario(){
-//        System.out.println("VELOCIDADE ATUAL: " + vAtual);
-        if(vAtual < bola.getVelocidadeMaxima()){
-            vAtual++;
-            bola.aumentaVelocidade(vAtual);
+        vAtual += 1;
+        if(isIAjogando){
+            if(jogadores.getyVelocidadeMovimentoIa() < jogadores.getyVelocidadeMovimento()){
+                jogadores.setyVelocidadeMovimentoIa(jogadores.getyVelocidadeMovimentoIa() + 1);
+            }
         }
+        bola.aumentaVelocidade(vAtual);
     }
 
+    public boolean isIAjogando() {
+        return isIAjogando;
+    }
 }
