@@ -18,8 +18,13 @@ public class Colisao {
         this.heightTela = heightTela;
     }
 
-    public boolean checkColisaoParedeJogadores(Rectangle jogador){
-        return jogador.getY() < heightTela - jogador.getHeight() - jogador.getHeight() / 2;
+    public boolean checkColisaoParedeCimaJogadores(Rectangle jogador){
+        return jogador.getY() >= 0;
+    }
+
+
+    public boolean checkColisaoParedeBaixoJogadores(Rectangle jogador){
+        return jogador.getY() <= (heightTela - jogador.getHeight() - (jogador.getHeight() / 2) + 10);
     }
 
     /**
