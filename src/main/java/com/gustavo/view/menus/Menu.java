@@ -2,9 +2,8 @@ package com.gustavo.view.menus;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyListener;
 
-public interface Menu extends KeyListener {
+public interface Menu {
 
     void initButtons();
 
