@@ -194,12 +194,15 @@ public class Movimento implements KeyListener {
             case 1:
                 inverteParaEsquerda();
                 inverteParaDeveDescer();
+                break;
             case 2:
                 inverteParaDireita();
                 inverteParaDeveSubir();
-            default:
+                break;
+            case 3:
                 inverteParaDireita();
                 inverteParaDeveDescer();
+                break;
         }
     }
 
