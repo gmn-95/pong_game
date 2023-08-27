@@ -6,9 +6,8 @@ public class Jogadores{
 
     private Rectangle player1;
     private Rectangle player2;
-
-    private final int yVelocidadeMovimentoParaCima = 8;
-    private final int yVelocidadeMovimentoParaBaixo = 8;
+    private final int yVelocidadeMovimento = 13;
+    private int yVelocidadeMovimentoIa = 1;
     private final int height = 80;
     private final int width = 8;
     private int y = 250;
@@ -45,27 +44,15 @@ public class Jogadores{
         return player2;
     }
 
-    public int getyVelocidadeMovimentoParaCima() {
-        return yVelocidadeMovimentoParaCima;
+    public int getyVelocidadeMovimento() {
+        return yVelocidadeMovimento;
     }
 
-    public int getyVelocidadeMovimentoParaBaixo() {
-        return yVelocidadeMovimentoParaBaixo;
+    public int getyVelocidadeMovimentoIa() {
+        return yVelocidadeMovimentoIa;
     }
 
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+    public void setyVelocidadeMovimentoIa(int yVelocidadeMovimentoIa) {
+        this.yVelocidadeMovimentoIa = yVelocidadeMovimentoIa;
     }
 }
