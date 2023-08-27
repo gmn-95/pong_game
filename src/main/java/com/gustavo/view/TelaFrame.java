@@ -1,5 +1,7 @@
 package com.gustavo.view;
 
+import com.gustavo.view.menus.MenuInicial;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -17,7 +19,7 @@ public class TelaFrame extends JFrame {
         setBackground(Color.BLACK);
         setLocationRelativeTo(null);
 
-        Menu menu = new Menu(widthTela, heightTela);
+        MenuInicial menu = new MenuInicial(widthTela, heightTela);
         add(menu);
 
         setVisible(true);
