@@ -3,8 +3,9 @@ package com.gustavo.view.menus;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class MenuAjuda extends JPanel implements Menu {
+public class MenuAjuda extends JPanel implements Menu, KeyListener {
 
     private final int widthTela;
     private final int heightTela;
