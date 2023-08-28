@@ -12,7 +12,7 @@
 ![partida](https://github.com/gmn-95/pong_game/assets/80294306/c41c9ae7-15b7-4502-903d-0798f2f13529)
 
 # Baixar e Jogar
-## !!!! Importante saber que para executar o jogo, é necessário ter a JRE 11 ou superior.!!!
+## !!!! Importante saber que para executar o jogo, é necessário ter a JAVA versão 11 ou superior!!!
 ## VERSÃO PARA LINUX
 link: https://github.com/gmn-95/pong_game/releases/download/download_verions/pong_game_linux.tar.gz
 
